@@ -1,0 +1,100 @@
+.reader-item {
+  padding: var(--space-8) 0;
+  border-bottom: 1px solid var(--color-border);
+  transition: all var(--transition-fast);
+}
+
+.reader-item:first-child {
+  padding-top: var(--space-4);
+}
+
+.reader-item:last-child {
+  border-bottom: none;
+}
+
+.reader-item-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.reader-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.reader-meta-divider {
+  color: var(--color-border);
+}
+
+.reader-item-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-3);
+}
+
+.reader-item-link {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.reader-item-link:hover {
+  color: var(--color-accent-primary);
+}
+
+.reader-item-excerpt {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+  max-width: var(--max-width-prose);
+}
+
+.reader-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.reader-item-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.reader-tag {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-muted);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+}
+
+.reader-read-link {
+  font-family: var(--font-primary);
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  transition: transform var(--transition-fast);
+}
+
+.reader-item:hover .reader-read-link {
+  transform: translateX(4px);
+}
