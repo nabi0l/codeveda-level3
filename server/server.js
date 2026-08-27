@@ -19,7 +19,20 @@ const authRouter = require('./routes/auth');
 app.use('/api/auth', authRouter);
 app.use('/api/posts', postsRouter);
 
-app.get('/api/health', (req, res) => {
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Design Journal API is active',
+    endpoints: {
+      health: '/api/health',
+      posts: '/api/posts',
+      auth: '/api/auth'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get(['/health', '/api/health'], (req, res) => {
   res.json({ 
     success: true, 
     message: 'Design Journal API is running',
