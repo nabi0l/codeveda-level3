@@ -4,16 +4,8 @@ import FeaturedPost from '../components/FeaturedPost';
 import LatestCarousel from '../components/LatestCarousel';
 import TimelineList from '../components/TimelineList';
 import postsApi from '../api/posts';
+import { STUDIO_CATEGORIES } from '../utils/categories';
 import './HomePage.css';
-
-const categories = [
-  { name: 'All Topics', slug: 'all', count: '10+' },
-  { name: 'UI Design', slug: 'ui-design', count: '03' },
-  { name: 'UX Research', slug: 'ux-research', count: '02' },
-  { name: 'Case Study', slug: 'case-study', count: '02' },
-  { name: 'Tutorial', slug: 'tutorial', count: '02' },
-  { name: 'Notes', slug: 'notes', count: '02' },
-];
 
 const HomePage = () => {
   const [featuredPost, setFeaturedPost] = useState(null);
@@ -90,7 +82,7 @@ const HomePage = () => {
             <Link to="/articles" className="category-pill active">
               All Topics <span className="pill-count">10</span>
             </Link>
-            {categories.filter(c => c.slug !== 'all').map(cat => (
+            {STUDIO_CATEGORIES.map(cat => (
               <Link key={cat.slug} to={`/blog/${cat.slug}`} className={`category-pill pill-${cat.slug}`}>
                 {cat.name}
               </Link>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { formatDate, calculateReadingTime, getCategoryClass, IMAGE_FALLBACK } from '../utils/formatters';
 import './LatestCarousel.css';
 
 function LatestCarousel({ posts }) {
@@ -19,24 +20,6 @@ function LatestCarousel({ posts }) {
 
   const goToSlide = (index) => {
     setCurrentIndex(index);
-  };
-
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
-
-  const getCategoryClass = (category) => {
-    return (category || '').toLowerCase().replace(/\s+/g, '-');
-  };
-
-  const calculateReadingTime = (content) => {
-    if (!content) return 3;
-    const words = content.split(/\s+/).length;
-    return Math.max(1, Math.ceil(words / 200));
   };
 
   return (
@@ -92,7 +75,7 @@ function LatestCarousel({ posts }) {
                       className="carousel-card-img"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=500&fit=crop';
+                        e.target.src = IMAGE_FALLBACK;
                       }}
                     />
                     <span className={`badge badge-${getCategoryClass(post.category)} carousel-card-badge`}>
@@ -102,7 +85,7 @@ function LatestCarousel({ posts }) {
 
                   <div className="carousel-card-body">
                     <div className="carousel-card-meta">
-                      <time>{formatDate(post.createdAt)}</time>
+                      <time>{formatDate(post.createdAt, { month: 'short', day: 'numeric', year: 'numeric' })}</time>
                       <span>•</span>
                       <span>{calculateReadingTime(post.content)} min read</span>
                     </div>

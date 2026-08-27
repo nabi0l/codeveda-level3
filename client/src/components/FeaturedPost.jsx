@@ -1,29 +1,12 @@
 import { Link } from 'react-router-dom';
 import { getPostAuthor } from '../utils/authors';
+import { formatDate, calculateReadingTime, getCategoryClass, getFallbackAvatar } from '../utils/formatters';
 import './FeaturedPost.css';
 
 function FeaturedPost({ post }) {
   if (!post) return null;
 
   const author = getPostAuthor(post);
-
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const getCategoryClass = (category) => {
-    return (category || '').toLowerCase().replace(/\s+/g, '-');
-  };
-
-  const calculateReadingTime = (content) => {
-    if (!content) return 4;
-    const words = content.split(/\s+/).length;
-    return Math.max(1, Math.ceil(words / 200));
-  };
 
   return (
     <section className="featured-section">
@@ -71,7 +54,7 @@ function FeaturedPost({ post }) {
                   alt={author.name}
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(author.name)}&background=18181b&color=c2785c&bold=true&size=140`;
+                    e.target.src = getFallbackAvatar(author.name);
                   }}
                 />
               </div>

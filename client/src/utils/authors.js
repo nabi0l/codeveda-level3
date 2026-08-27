@@ -1,3 +1,5 @@
+import { getFallbackAvatar } from './formatters';
+
 export const studioAuthors = {
   'elena': {
     name: 'Elena Vance',
@@ -43,7 +45,7 @@ export function getPostAuthor(post) {
       name: post.author.username,
       role: 'Studio Contributor',
       bio: `${post.author.username} is a contributor to Atelier Journal writing on modern design and digital craft.`,
-      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author.username)}&background=18181b&color=c2785c&bold=true&size=140`
+      avatar: getFallbackAvatar(post.author.username)
     };
   }
 

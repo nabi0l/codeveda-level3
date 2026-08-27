@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import FeaturedPost from '../components/FeaturedPost';
 import TimelineList from '../components/TimelineList';
 import postsApi from '../api/posts';
+import { getCategoryNameFromSlug } from '../utils/categories';
 import './CategoryPage.css';
 
 const CategoryPage = () => {
@@ -12,15 +13,7 @@ const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const categoryMap = {
-    'ui-design': 'UI Design',
-    'ux-research': 'UX Research',
-    'case-study': 'Case Study',
-    'tutorial': 'Tutorial',
-    'notes': 'Notes'
-  };
-
-  const categoryName = categoryMap[category] || category;
+  const categoryName = getCategoryNameFromSlug(category);
 
   useEffect(() => {
     const fetchCategoryPosts = async () => {

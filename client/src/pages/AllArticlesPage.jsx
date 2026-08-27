@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ReaderList from '../components/ReaderList';
 import postsApi from '../api/posts';
+import { CATEGORY_FILTER_NAMES } from '../utils/categories';
 import './AllArticlesPage.css';
-
-const categories = ['All', 'UI Design', 'UX Research', 'Case Study', 'Tutorial', 'Notes'];
 
 const AllArticlesPage = () => {
   const [posts, setPosts] = useState([]);
@@ -113,7 +112,7 @@ const AllArticlesPage = () => {
             </div>
 
             <div className="filter-category-tabs">
-              {categories.map((cat) => (
+              {CATEGORY_FILTER_NAMES.map((cat) => (
                 <button
                   key={cat}
                   className={`filter-tab ${selectedCategory === cat ? 'active' : ''}`}

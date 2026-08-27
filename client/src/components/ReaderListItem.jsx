@@ -1,25 +1,8 @@
 import { Link } from 'react-router-dom';
+import { formatDate, calculateReadingTime, getCategoryClass } from '../utils/formatters';
 import './ReaderListItem.css';
 
 function ReaderListItem({ post }) {
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const calculateReadingTime = (content) => {
-    if (!content) return 3;
-    const words = content.split(/\s+/).length;
-    return Math.max(1, Math.ceil(words / 200));
-  };
-
-  const getCategoryClass = (category) => {
-    return (category || '').toLowerCase().replace(/\s+/g, '-');
-  };
-
   return (
     <article className="reader-item">
       <div className="reader-item-header">

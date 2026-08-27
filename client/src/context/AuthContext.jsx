@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import authApi from '../api/auth';
+import { getErrorMessage } from '../utils/formatters';
 
 const AuthContext = createContext(null);
 
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Login failed:', error);
       return { 
         success: false, 
-        error: error.response?.data?.error || 'Login failed' 
+        error: getErrorMessage(error, 'Login failed') 
       };
     }
   };
@@ -57,7 +58,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Registration failed:', error);
       return { 
         success: false, 
-        error: error.response?.data?.error || 'Registration failed' 
+        error: getErrorMessage(error, 'Registration failed') 
       };
     }
   };

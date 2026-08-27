@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import RelatedPosts from '../components/RelatedPosts';
 import postsApi from '../api/posts';
 import { getPostAuthor } from '../utils/authors';
+import { formatDate, calculateReadingTime, getCategoryClass, getFallbackAvatar } from '../utils/formatters';
 import './PostDetailPage.css';
 
 const PostDetailPage = () => {
@@ -26,22 +27,6 @@ const PostDetailPage = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-  };
-
-  const calculateReadingTime = (content) => {
-    if (!content) return 3;
-    const wordsPerMinute = 200;
-    const words = content.split(/\s+/).length;
-    return Math.max(1, Math.ceil(words / wordsPerMinute));
-  };
-
-  const getCategoryClass = (category) => {
-    return (category || '').toLowerCase().replace(/\s+/g, '-');
-  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -180,7 +165,7 @@ const PostDetailPage = () => {
                   className="author-avatar-img"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(author.name)}&background=18181b&color=c2785c&bold=true&size=140`;
+                    e.target.src = getFallbackAvatar(author.name);
                   }}
                 />
                 <div className="author-details">
@@ -255,7 +240,7 @@ const PostDetailPage = () => {
               className="author-card-avatar"
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(author.name)}&background=18181b&color=c2785c&bold=true&size=140`;
+                e.target.src = getFallbackAvatar(author.name);
               }}
             />
             <div className="author-card-info">

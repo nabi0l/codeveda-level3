@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import postsApi from '../api/posts';
+import { formatDate, getErrorMessage } from '../utils/formatters';
 import './AdminPostsList.css';
 
 const AdminPostsList = () => {
@@ -18,8 +19,7 @@ const AdminPostsList = () => {
         setPosts(postsArray);
         setError(null);
       } catch (err) {
-        const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Failed to load posts. Please try again later.';
-        setError(errorMessage);
+        setError(getErrorMessage(err, 'Failed to load posts. Please try again later.'));
         console.error('Error fetching posts:', err);
       } finally {
         setLoading(false);
@@ -35,15 +35,9 @@ const AdminPostsList = () => {
       setPosts(posts.filter(post => post._id !== postId));
       setDeleteConfirm(null);
     } catch (err) {
-      const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Failed to delete post. Please try again.';
-      setError(errorMessage);
+      setError(getErrorMessage(err, 'Failed to delete post. Please try again.'));
       console.error('Error deleting post:', err);
     }
-  };
-
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   if (loading) {
@@ -112,7 +106,7 @@ const AdminPostsList = () => {
                         <span className="badge badge-normal">Standard</span>
                       )}
                     </td>
-                    <td>{formatDate(post.createdAt)}</td>
+                    <td>{formatDate(post.createdAt, { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td className="actions-cell">
                       <Link 
                         to={`/admin/posts/${post._id}/edit`}

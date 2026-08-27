@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import postsApi from '../api/posts';
+import { CATEGORY_NAMES } from '../utils/categories';
+import { generateSlug, getErrorMessage } from '../utils/formatters';
 import './PostForm.css';
 
 const PostForm = () => {
@@ -14,7 +16,7 @@ const PostForm = () => {
     excerpt: '',
     content: '',
     coverImage: '',
-    category: 'UI Design',
+    category: CATEGORY_NAMES[0] || 'UI Design',
     tags: '',
     featured: false
   });
@@ -22,8 +24,6 @@ const PostForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fetchLoading, setFetchLoading] = useState(isEditing);
-
-  const categories = ['UI Design', 'UX Research', 'Case Study', 'Tutorial', 'Notes'];
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -47,7 +47,7 @@ const PostForm = () => {
         }
         setError(null);
       } catch (err) {
-        setError('Failed to load post. Please try again.');
+        setError(getErrorMessage(err, 'Failed to load post. Please try again.'));
         console.error('Error fetching post:', err);
       } finally {
         setFetchLoading(false);
@@ -56,13 +56,6 @@ const PostForm = () => {
 
     fetchPost();
   }, [id, isEditing]);
-
-  const generateSlug = (title) => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-  };
 
   const handleTitleChange = (e) => {
     const newTitle = e.target.value;
@@ -100,8 +93,7 @@ const PostForm = () => {
 
       navigate('/admin/posts');
     } catch (err) {
-      const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Failed to save post. Please try again.';
-      setError(errorMessage);
+      setError(getErrorMessage(err, 'Failed to save post. Please try again.'));
       console.error('Error saving post:', err);
     } finally {
       setLoading(false);
@@ -210,7 +202,7 @@ const PostForm = () => {
                 onChange={handleChange}
                 required
               >
-                {categories.map(category => (
+                {CATEGORY_NAMES.map(category => (
                   <option key={category} value={category}>
                     {category}
                   </option>

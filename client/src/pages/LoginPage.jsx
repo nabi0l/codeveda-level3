@@ -30,7 +30,11 @@ const LoginPage = () => {
     try {
       const result = await login(formData);
       if (result.success) {
-        navigate('/');
+        if (result.user.role === 'admin') {
+          navigate('/admin/posts');
+        } else {
+          navigate('/');
+        }
       } else {
         setError(result.error);
       }

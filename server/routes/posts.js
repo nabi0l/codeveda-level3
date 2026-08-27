@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
-const { protect } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 
 const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
@@ -37,6 +37,22 @@ router.get('/', asyncHandler(async (req, res) => {
   });
 }));
 
+router.get('/id/:id', asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id).populate('author', 'username email');
+  
+  if (!post) {
+    return res.status(404).json({ 
+      success: false, 
+      message: 'Post not found' 
+    });
+  }
+  
+  res.json({
+    success: true,
+    post
+  });
+}));
+
 router.get('/:slug', asyncHandler(async (req, res) => {
   const post = await Post.findOne({ slug: req.params.slug }).populate('author', 'username email');
   
@@ -53,7 +69,7 @@ router.get('/:slug', asyncHandler(async (req, res) => {
   });
 }));
 
-router.post('/', protect, asyncHandler(async (req, res) => {
+router.post('/', protect, authorize('admin'), asyncHandler(async (req, res) => {
   const { title, slug, excerpt, content, coverImage, category, tags, featured } = req.body;
   
   if (!title || !slug || !content || !category) {
@@ -91,7 +107,7 @@ router.post('/', protect, asyncHandler(async (req, res) => {
   });
 }));
 
-router.put('/:id', protect, asyncHandler(async (req, res) => {
+router.put('/:id', protect, authorize('admin'), asyncHandler(async (req, res) => {
   const { title, slug, excerpt, content, coverImage, category, tags, featured } = req.body;
   
   let post = await Post.findById(req.params.id);
@@ -100,13 +116,6 @@ router.put('/:id', protect, asyncHandler(async (req, res) => {
     return res.status(404).json({ 
       success: false,
       message: 'Post not found' 
-    });
-  }
-  
-  if (post.author.toString() !== req.user.id && req.user.role !== 'admin') {
-    return res.status(403).json({ 
-      success: false,
-      message: 'Not authorized to update this post' 
     });
   }
   
@@ -144,20 +153,13 @@ router.put('/:id', protect, asyncHandler(async (req, res) => {
   });
 }));
 
-router.delete('/:id', protect, asyncHandler(async (req, res) => {
+router.delete('/:id', protect, authorize('admin'), asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
   
   if (!post) {
     return res.status(404).json({ 
       success: false,
       message: 'Post not found' 
-    });
-  }
-  
-  if (post.author.toString() !== req.user.id && req.user.role !== 'admin') {
-    return res.status(403).json({ 
-      success: false,
-      message: 'Not authorized to delete this post' 
     });
   }
   

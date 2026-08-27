@@ -1,15 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { STUDIO_CATEGORIES } from '../utils/categories';
 import './Header.css';
-
-const categories = [
-  { name: 'UI Design', slug: 'ui-design' },
-  { name: 'UX Research', slug: 'ux-research' },
-  { name: 'Case Study', slug: 'case-study' },
-  { name: 'Tutorial', slug: 'tutorial' },
-  { name: 'Notes', slug: 'notes' },
-];
 
 function Header() {
   const location = useLocation();
@@ -79,41 +72,43 @@ function Header() {
               <span className="logo-dot">.</span>
             </Link>
 
-            <nav className="header-nav desktop-nav">
-              <Link 
-                to="/" 
-                className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/articles" 
-                className={`nav-link ${location.pathname === '/articles' ? 'active' : ''}`}
-              >
-                The Archive
-              </Link>
-              
-              <div className="nav-dropdown">
-                <span className="nav-link dropdown-trigger">
-                  Studio Topics
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </span>
-                <div className="dropdown-menu">
-                  {categories.map((cat) => (
-                    <Link
-                      key={cat.slug}
-                      to={`/blog/${cat.slug}`}
-                      className="dropdown-item"
-                    >
-                      <span className={`cat-dot cat-dot-${cat.slug}`}></span>
-                      {cat.name}
-                    </Link>
-                  ))}
+            {!isAdmin || !location.pathname.startsWith('/admin') ? (
+              <nav className="header-nav desktop-nav">
+                <Link 
+                  to="/" 
+                  className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+                >
+                  Home
+                </Link>
+                <Link 
+                  to="/articles" 
+                  className={`nav-link ${location.pathname === '/articles' ? 'active' : ''}`}
+                >
+                  The Archive
+                </Link>
+                
+                <div className="nav-dropdown">
+                  <span className="nav-link dropdown-trigger">
+                    Studio Topics
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+                  <div className="dropdown-menu">
+                    {STUDIO_CATEGORIES.map((cat) => (
+                      <Link
+                        key={cat.slug}
+                        to={`/blog/${cat.slug}`}
+                        className="dropdown-item"
+                      >
+                        <span className={`cat-dot cat-dot-${cat.slug}`}></span>
+                        {cat.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </nav>
+              </nav>
+            ) : null}
 
             <div className="header-actions">
               <button 
@@ -178,28 +173,34 @@ function Header() {
           <div className="mobile-menu-drawer">
             <div className="container">
               <nav className="mobile-nav">
-                <Link to="/" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-                  Home
-                </Link>
-                <Link to="/articles" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-item ${location.pathname === '/articles' ? 'active' : ''}`}>
-                  The Archive
-                </Link>
-                <div className="mobile-nav-section-title">Studio Topics</div>
-                {categories.map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    to={`/blog/${cat.slug}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="mobile-nav-item mobile-category-item"
-                  >
-                    <span className={`cat-dot cat-dot-${cat.slug}`}></span>
-                    {cat.name}
+                {!isAdmin || !location.pathname.startsWith('/admin') ? (
+                  <>
+                    <Link to="/" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+                      Home
+                    </Link>
+                    <Link to="/articles" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-item ${location.pathname === '/articles' ? 'active' : ''}`}>
+                      The Archive
+                    </Link>
+                    <div className="mobile-nav-section-title">Studio Topics</div>
+                    {STUDIO_CATEGORIES.map((cat) => (
+                      <Link
+                        key={cat.slug}
+                        to={`/blog/${cat.slug}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="mobile-nav-item mobile-category-item"
+                      >
+                        <span className={`cat-dot cat-dot-${cat.slug}`}></span>
+                        {cat.name}
+                      </Link>
+                    ))}
+                    <div className="mobile-nav-divider"></div>
+                  </>
+                ) : null}
+                {isAdmin && (
+                  <Link to="/admin/posts" onClick={() => setMobileMenuOpen(false)} className="mobile-nav-item mobile-admin-link">
+                    Studio Desk
                   </Link>
-                ))}
-                <div className="mobile-nav-divider"></div>
-                <Link to="/admin/posts" onClick={() => setMobileMenuOpen(false)} className="mobile-nav-item mobile-admin-link">
-                  Studio Desk
-                </Link>
+                )}
               </nav>
             </div>
           </div>
@@ -228,7 +229,7 @@ function Header() {
             </form>
             <div className="search-quick-tags">
               <span className="quick-tag-label">Studio Topics:</span>
-              {categories.map(c => (
+              {STUDIO_CATEGORIES.map(c => (
                 <button
                   key={c.slug}
                   className="quick-tag-btn"

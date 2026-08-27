@@ -1,25 +1,8 @@
 import { Link } from 'react-router-dom';
+import { formatDate, calculateReadingTime, getCategoryClass, IMAGE_FALLBACK } from '../utils/formatters';
 import './TimelineItem.css';
 
 function TimelineItem({ post, index }) {
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
-  const getCategoryClass = (category) => {
-    return (category || '').toLowerCase().replace(/\s+/g, '-');
-  };
-
-  const calculateReadingTime = (content) => {
-    if (!content) return 3;
-    const words = content.split(/\s+/).length;
-    return Math.max(1, Math.ceil(words / 200));
-  };
-
   return (
     <div className="timeline-item">
       <div className="timeline-node">
@@ -27,7 +10,7 @@ function TimelineItem({ post, index }) {
       </div>
 
       <div className="timeline-meta-col">
-        <time className="timeline-date">{formatDate(post.createdAt)}</time>
+        <time className="timeline-date">{formatDate(post.createdAt, { year: 'numeric', month: 'short', day: 'numeric' })}</time>
         <span className={`badge badge-${getCategoryClass(post.category)} timeline-badge`}>
           {post.category}
         </span>
@@ -59,7 +42,7 @@ function TimelineItem({ post, index }) {
                 className="timeline-card-img" 
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=500&fit=crop';
+                  e.target.src = IMAGE_FALLBACK;
                 }}
               />
             </div>

@@ -1,14 +1,11 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { extractToken } = require('../utils/auth');
 
 // Friendly reminder: Verifies JWT token and attaches active user instance to the request
 exports.protect = async (req, res, next) => {
   try {
-    let token;
-
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
+    const token = extractToken(req);
 
     if (!token) {
       return res.status(401).json({
@@ -61,31 +58,4 @@ exports.authorize = (...roles) => {
     }
     next();
   };
-};
-
-exports.optionalAuth = async (req, res, next) => {
-  try {
-    let token;
-
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
-
-    if (token) {
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.id).select('-password');
-        
-        if (user && user.isActive) {
-          req.user = user;
-        }
-      } catch (jwtError) {
-        console.log('Optional auth token invalid:', jwtError.message);
-      }
-    }
-
-    next();
-  } catch (error) {
-    next();
-  }
 };
